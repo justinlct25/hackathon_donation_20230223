@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  config-provider-flask:
+    build:
+      dockerfile: Dockerfile
+    container_name: hackthediff-flask
+    environment:
+      APP_ENV: "prod"
+      APP_DEBUG: "False"
+    ports:
+      - "5000:5000"
+    networks:
+      - frontend
+networks:
+  frontend:
+    driver: bridge

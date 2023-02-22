@@ -1,3 +1,9 @@
+# Hack The Diff 2023
+
+# Importing the font
+
+Importing a font in CSS:
+```css
 @font-face {
     font-family: MindMeridian-Regular;
     src: url(../fonts/MindMeridianW05-Regular.woff2) format("woff2"), url(../fonts/MindMeridianW05-Regular.woff) format("woff");
@@ -15,20 +21,15 @@
     src: url(../fonts/MindMeridianW05-Bold.woff2) format("woff2"), url(../fonts/MindMeridianW05-Bold.woff) format("woff");
     font-display: swap
 }
+```
 
-html {
-    height: 100%;
-}
-
+CSS Example of how to use the font:
+```css
 body {
-    background-color: #1A1A1A;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: "MindMeridian-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;;
+	font-family: "MindMeridian-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-h1 {
-    color: white;
-    font-size: 200%;
+.bold {
+	font-family: "MindMeridian-Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+```
