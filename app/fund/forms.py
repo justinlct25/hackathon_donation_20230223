@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, IntegerField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, IntegerField, SelectField, DateField
 from wtforms.validators import DataRequired, EqualTo, ValidationError, Regexp
 from fund.models import User
 from flask import flash
@@ -29,3 +29,11 @@ class NewPostForm(FlaskForm):
   content = StringField('Content', validators=[DataRequired()])
   submit = SubmitField('Post')
 
+class AddProjectForm(FlaskForm):
+  name = StringField('Name', validators=[DataRequired()])
+  descripiton = StringField('Description', validators=[DataRequired()])
+  service_target = StringField('Service Target', validators=[DataRequired()])
+  funding_target = StringField('Funding Target', validators=[DataRequired()])
+  before_date = DateField('Before Date')
+  
+  
