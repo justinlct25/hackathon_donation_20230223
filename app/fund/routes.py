@@ -9,10 +9,8 @@ import random
 @app.route('/home')
 def home():
     # user = User.query.get(current_user.id)
-    return render_template('index.html')
-    user = User.query.get(current_user.id)
     projects = Project.query.all()
-    return render_template('index.html', user=user, projects=projects)
+    return render_template('index.html', projects=projects)
 
 @app.route("/login", methods=['GET','POST'])
 def login():
