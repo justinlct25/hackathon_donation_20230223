@@ -46,3 +46,7 @@ def register():
 @app.route("/registered")
 def registered():
   return render_template('registered.html', title='Thanks!')
+
+@app.route("/campaign")
+def campaign():
+  return render_template('campaign.html', title='Campaign')
