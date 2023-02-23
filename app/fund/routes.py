@@ -1,8 +1,8 @@
 from fund import app, db
 from flask import render_template, url_for, request, jsonify, redirect, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
-from fund.models import User, Project
-from fund.forms import RegistrationForm, LoginForm, AddProjectForm
+from fund.models import User, Project, ProjectGoal
+from fund.forms import RegistrationForm, LoginForm, AddProjectForm, AddGoalForm
 import random
 
 @app.route('/')
@@ -24,7 +24,7 @@ def login():
       flash('You\'ve successfully logged in,'+' '+ current_user.username +'!')
       return redirect(url_for('home'))
     flash('Invalid username or password.')
-  return render_template('login.html',title='Login', form=form, user=user)
+  return render_template('login.html',title='Login', form=form)
 
 @app.route("/logout")
 def logout():
@@ -34,15 +34,14 @@ def logout():
 
 @app.route("/register", methods=['GET','POST'])
 def register():
-  form = RegistrationForm()
-  if form.validate_on_submit():
-    form.validate_username(form.username.data)
-    user = User(username=form.username.data, password=form.password.data, email=form.email.data, icon=f'default_{random.randint(0,9)}.png')
-    db.session.add(user)
-    db.session.commit()
-    flash('Registration successful!')
-    return redirect(url_for('registered'))
-  return render_template('register.html',title='Register',form=form)
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, password=form.password.data, email=form.email.data, icon=f'default_{random.randint(0,9)}.png')
+        db.session.add(user)
+        db.session.commit()
+        flash('Registration successful!')
+        return redirect(url_for('registered'))
+    return render_template('register.html',title='Register',form=form)
 
 @app.route("/registered")
 def registered():
@@ -54,7 +53,7 @@ def addProject():
     user = User.query.get(current_user.id)
     if form.validate_on_submit():
         project = Project(name=form.name.data, description=form.descripiton.data, service_target=form.service_target.data, funding_target=form.funding_target.data, before_date=form.before_date.data)
-        project.prj_managers.append(user)
+        project.managers.append(user)
         db.session.add(project)
         db.session.commit()
         flash('Project added successfully!')
@@ -68,3 +67,21 @@ def project(prj_id):
     project = Project.query.get_or_404(prj_id)
     print(project.managers)
     return render_template('project.html', user=user, project=project)
+
+@app.route("/addgoal/<int:prj_id>", methods=['GET', 'POST'])
+@login_required
+def addGoal(prj_id):
+    form = AddGoalForm()
+    user = User.query.get(current_user.id)
+    project = Project.query.get_or_404(prj_id)
+    if form.validate_on_submit():
+        goal = ProjectGoal(name=form.name.data, funding_required=form.funding_required.data, project_id=prj_id)
+        project = Project.query.get(prj_id)
+        db.session.add(goal)
+        db.session.flush()
+        db.session.refresh(goal)
+        project.goals.append(goal)
+        db.session.commit()
+        flash("Goal added")
+        return redirect(url_for('project', prj_id=project.id))
+    return render_template('addgoal.html', user=user, project=project, form=form)

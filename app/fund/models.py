@@ -80,7 +80,6 @@ class Project(db.Model):
 class ProjectGoal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
-    description = db.Column(db.Text, default="")
     funding_required = db.Column(db.Integer, default=0)
     icon = db.Column(db.Text, nullable=True, default="goal_default_1.png")
     post_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
