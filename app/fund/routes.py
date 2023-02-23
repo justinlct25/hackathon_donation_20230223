@@ -2,7 +2,7 @@ from fund import app, db
 from flask import render_template, url_for, request, jsonify, redirect, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 from fund.models import User
-from fund.forms import RegistrationForm, LoginForm
+from fund.forms import RegistrationForm, LoginForm, AddProjectForm
 import random
 
 @app.route('/')
@@ -46,3 +46,9 @@ def register():
 @app.route("/registered")
 def registered():
   return render_template('registered.html', title='Thanks!')
+
+@app.route("/addproject")
+def addProject():
+    form = AddProjectForm()
+    user = User.query.filter_by(username=form.username.data).first()
+    return render_template('addproject.html', title="Add Project", form=form, user=user)

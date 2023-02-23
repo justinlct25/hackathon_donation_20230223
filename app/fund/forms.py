@@ -33,7 +33,7 @@ class AddProjectForm(FlaskForm):
   name = StringField('Name', validators=[DataRequired()])
   descripiton = StringField('Description', validators=[DataRequired()])
   service_target = StringField('Service Target', validators=[DataRequired()])
-  funding_target = StringField('Funding Target', validators=[DataRequired()])
+  funding_target = IntegerField('Funding Target', validators=[DataRequired()])
   before_date = DateField('Before Date')
   
   

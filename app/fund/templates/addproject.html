@@ -1,0 +1,10 @@
+{% extends "layout.html" %} {% block content %}
+<div>
+    {{ form.csrf_token }}
+    <p> {{ form.username.label }} {{ form.username }} </p>
+    <p> {{ form.description.label }} {{ form.description }} </p>
+    <p> {{ form.service_target.label }} {{ form.service_target }} </p>
+    <p> {{ form.funding_target.label }} {{ form.funding_target }} </p>
+    <p> {{ form.before_date }} {{ form.before_date }} </p>
+</div>
+{% endblock content %}
