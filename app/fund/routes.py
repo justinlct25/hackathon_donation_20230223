@@ -7,8 +7,9 @@ import random
 
 @app.route('/')
 @app.route('/home')
-@login_required
 def home():
+    # user = User.query.get(current_user.id)
+    return render_template('index.html')
     user = User.query.get(current_user.id)
     projects = Project.query.all()
     return render_template('index.html', user=user, projects=projects)
@@ -46,6 +47,10 @@ def register():
 @app.route("/registered")
 def registered():
   return render_template('registered.html', title='Thanks!')
+
+@app.route("/campaign")
+def campaign():
+  return render_template('campaign.html', title='Campaign')
 
 @app.route("/addproject", methods=['GET', 'POST'])
 def addProject():

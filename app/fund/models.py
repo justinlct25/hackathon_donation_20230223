@@ -94,6 +94,12 @@ class GoalProgressPost(db.Model):
     post_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     goal_id = db.Column(db.Integer, db.ForeignKey('project_goal.id'), nullable=False)
 
+class GoalStage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(40), nullable=False)
+    number = db.Column(db.Integer, nullable=False)
+    target_date = db.Column(db.DateTime, nullable=True)
+
 class DonationAmount(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Integer, nullable=False, default=0)
