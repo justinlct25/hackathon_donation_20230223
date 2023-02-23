@@ -1,3 +1,3 @@
-from app import app, db
+from fund import app, db
 
 with app.app_context(): db.create_all()
