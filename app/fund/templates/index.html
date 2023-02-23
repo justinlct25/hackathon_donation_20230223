@@ -1,5 +1,9 @@
 {% extends "layout.html" %} {% block content %}
 <div>
-    body
+    {% for project in projects %}
+        <div>
+            {{ project.name }}
+        </div>
+    {% endfor %}
 </div>
 {% endblock content %}
