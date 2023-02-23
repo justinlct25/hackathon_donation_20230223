@@ -61,3 +61,11 @@ def addProject():
         flash('Project added successfully!')
         return redirect(url_for('home'))
     return render_template('addproject.html', title="Add Project", form=form, user=user)
+
+@app.route("/project/<int:prj_id>")
+@login_required
+def project(prj_id):
+    user= User.query.get(current_user.id)
+    project = Project.query.get_or_404(prj_id)
+    print(project.managers)
+    return render_template('project.html', user=user, project=project)

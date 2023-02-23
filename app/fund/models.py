@@ -73,7 +73,7 @@ class Project(db.Model):
     post_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     org_id = db.Column(db.Integer, db.ForeignKey('organization.id'), nullable=True)
     tags = db.relationship('Tag', secondary=project_tag_association_table, backref='projects')
-    prj_managers = db.relationship('User', secondary=project_manager_association_table, backref='managing_prjs') # many-to-many
+    managers = db.relationship('User', secondary=project_manager_association_table, backref='managing_prjs') # many-to-many
     donaters = db.relationship('User', secondary=project_donator_association_table, backref='donated_prjs') # many-to-many
     goals = db.relationship('ProjectGoal', backref='project', lazy=True) # one-to-many
 

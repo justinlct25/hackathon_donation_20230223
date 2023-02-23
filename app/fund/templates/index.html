@@ -1,8 +1,9 @@
 {% extends "layout.html" %} {% block content %}
-<div>
+<div class="project-list-container">
     {% for project in projects %}
-        <div>
+        <div class="project-brief">
             {{ project.name }}
+            <a href="{{ url_for('project', prj_id=project.id) }}">view</a>
         </div>
     {% endfor %}
 </div>
