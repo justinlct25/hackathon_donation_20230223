@@ -1,0 +1,11 @@
+{% extends "layout.html" %} {% block content %}
+<form method="POST" action="">
+    {{ form.csrf_token }}
+    <p> {{ form.name.label }} {{ form.name }} </p>
+    <p> {{ form.descripiton.label }} {{ form.descripiton }} </p>
+    <p> {{ form.service_target.label }} {{ form.service_target }} </p>
+    <p> {{ form.funding_target.label }} {{ form.funding_target }} </p>
+    <p> {{ form.before_date.label }} {{ form.before_date }} </p>
+    <p><input class="btn btn-info" type="submit" value="Add Proejct"></p>
+</form>
+{% endblock content %}

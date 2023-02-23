@@ -30,24 +30,17 @@
                         <a class="nav-link {{ 'active' if active_page == 'home' else '' }}" href="{{ url_for('home') }}">Portfolio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ 'active' if active_page == 'home' else '' }}" href="{{ url_for('home') }}">Projects</a>
+                        <a class="nav-link {{ 'active' if active_page == 'addProject' else '' }}" href="{{ url_for('addProject') }}">AddPrj</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ 'active' if active_page == 'home' else '' }}" href="{{ url_for('home') }}">Logout</a>
                     </li>
+                    
                 </ul>
             </div>
         </div>
     </nav>
-    <div id="flask-msg">
-        {% with messages = get_flashed_messages() %} {% if messages %}
-        <ul class=flashes>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %} {% endwith %}
-    </div>
+
 </header>
 
 <body>
