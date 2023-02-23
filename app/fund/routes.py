@@ -1,7 +1,7 @@
 from fund import app, db
 from flask import render_template, url_for, request, jsonify, redirect, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
-from fund.models import User
+from fund.models import User, Project
 from fund.forms import RegistrationForm, LoginForm, AddProjectForm
 import random
 
@@ -10,7 +10,8 @@ import random
 @login_required
 def home():
     user = User.query.get(current_user.id)
-    return render_template('index.html', user=user)
+    projects = Project.query.all()
+    return render_template('index.html', user=user, projects=projects)
 
 @app.route("/login", methods=['GET','POST'])
 def login():
@@ -23,7 +24,7 @@ def login():
       flash('You\'ve successfully logged in,'+' '+ current_user.username +'!')
       return redirect(url_for('home'))
     flash('Invalid username or password.')
-  return render_template('login.html',title='Login', form=form)
+  return render_template('login.html',title='Login', form=form, user=user)
 
 @app.route("/logout")
 def logout():
@@ -35,7 +36,7 @@ def logout():
 def register():
   form = RegistrationForm()
   if form.validate_on_submit():
-    # form.validate_username(form.username.data)
+    form.validate_username(form.username.data)
     user = User(username=form.username.data, password=form.password.data, email=form.email.data, icon=f'default_{random.randint(0,9)}.png')
     db.session.add(user)
     db.session.commit()
@@ -47,8 +48,15 @@ def register():
 def registered():
   return render_template('registered.html', title='Thanks!')
 
-@app.route("/addproject")
+@app.route("/addproject", methods=['GET', 'POST'])
 def addProject():
     form = AddProjectForm()
-    user = User.query.filter_by(username=form.username.data).first()
+    user = User.query.get(current_user.id)
+    if form.validate_on_submit():
+        project = Project(name=form.name.data, description=form.descripiton.data, service_target=form.service_target.data, funding_target=form.funding_target.data, before_date=form.before_date.data)
+        project.prj_managers.append(user)
+        db.session.add(project)
+        db.session.commit()
+        flash('Project added successfully!')
+        return redirect(url_for('home'))
     return render_template('addproject.html', title="Add Project", form=form, user=user)
