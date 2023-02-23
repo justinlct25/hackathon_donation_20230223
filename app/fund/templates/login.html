@@ -1,15 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morgen</title>
-</head>
-
-<body>
-
-</body>
-
-</html>
+{% extends "layout.html" %} {% block content %}
+<div class="outer-container login">
+    <div class="app-name">Donation</div>
+    <div>A donation platform</div>
+    <form method="POST" action="">
+        {{ form.csrf_token }}
+        <p>
+            <div>{{ form.username.label }} </div>
+            <div>{{ form.username }}</div>
+        </p>
+        <p>
+            <div>{{ form.password.label }} </div>
+            <div>{{ form.password }}</div>
+        </p>
+        <p><input class="btn btn-info" type="submit" value="Login"></p>
+        <a href="{{ url_for('register') }}" class="header">Register</a>
+    </form>
+</div>
+{% endblock content %}

@@ -36,7 +36,6 @@ class User(UserMixin,db.Model):
     hashed_password=db.Column(db.String(128))
     icon = db.Column(db.Text, nullable=True, default="user_default_1.png")
 
-
     @property
     def password(self):
       raise AttributeError('Password is not readable.')
@@ -115,7 +114,7 @@ class DonationRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     amount_id = db.Column(db.Integer, db.ForeignKey('donation_amount.id'), nullable=False)
     period_id = db.Column(db.Integer, db.ForeignKey('donation_period.id'), nullable=False)
-    donater_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    plan_id = db.Column(db.Integer, db.ForeignKey('donation_plan.id'), nullable=False)
 
 
 
