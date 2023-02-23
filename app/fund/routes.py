@@ -7,10 +7,9 @@ import random
 
 @app.route('/')
 @app.route('/home')
-@login_required
 def home():
-    user = User.query.get(current_user.id)
-    return render_template('index.html', user=user)
+    # user = User.query.get(current_user.id)
+    return render_template('index.html')
 
 @app.route("/login", methods=['GET','POST'])
 def login():
