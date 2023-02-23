@@ -25,7 +25,7 @@ user_donation_plan_association_table = db.Table('user_donation_plan',
                                                 db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
                                                 db.Column('donation_plan_id', db.Integer, db.ForeignKey('donation_plan.id')),
                                                 db.PrimaryKeyConstraint('user_id', 'donation_plan_id')
-                                            )
+                                                )
                                         
 
 class User(UserMixin,db.Model):
