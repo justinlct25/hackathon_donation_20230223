@@ -67,10 +67,10 @@ class Project(db.Model):
     name = db.Column(db.String(40), nullable=False)
     description = db.Column(db.Text, default="")
     service_target = db.Column(db.Text, default="")
-    funding_target = db.Column(db.Int, default=0)
-    funding_raised = db.Column(db.Int, default=0)
+    funding_target = db.Column(db.Integer, default=0)
+    funding_raised = db.Column(db.Integer, default=0)
     icon = db.Column(db.Text, nullable=True, default="project_default_1.png")
-    before_date = db.Column(db.DateTime, niullalbe=True)
+    before_date = db.Column(db.DateTime, nullable=True)
     post_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     org_id = db.Column(db.Integer, db.ForeignKey('organization.id'), nullable=True)
     tags = db.relationship('Tag', secondary=project_tag_association_table, backref='projects')
@@ -82,7 +82,7 @@ class ProjectGoal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
     description = db.Column(db.Text, default="")
-    funding_required = db.Column(db.Int, default=0)
+    funding_required = db.Column(db.Integer, default=0)
     icon = db.Column(db.Text, nullable=True, default="goal_default_1.png")
     post_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
@@ -94,7 +94,7 @@ class GoalProgressPost(db.Model):
     description = db.Column(db.Text, default="")
     image = db.Column(db.Text, nullable=True, default="goal_default_1.png")
     post_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    goal_id = db.Column(db.Integer, db.ForeignKey('goal.id'), nullable=False)
+    goal_id = db.Column(db.Integer, db.ForeignKey('project_goal.id'), nullable=False)
 
 class DonationAmount(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -106,15 +106,15 @@ class DonationPeriod(db.Model):
 
 class DonationPlan(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    amount_id = db.Column(db.Integer, db.ForeignKey('amount.id'), nullable=False)
-    period_id = db.Column(db.Integer, db.ForeignKey('period.id'), nullable=False)
+    amount_id = db.Column(db.Integer, db.ForeignKey('donation_amount.id'), nullable=False)
+    period_id = db.Column(db.Integer, db.ForeignKey('donation_period.id'), nullable=False)
     donater_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     records = db.relationship('DonationRecord', backref='plan', lazy=True) # one-to-many
 
 class DonationRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    amount_id = db.Column(db.Integer, db.ForeignKey('amount.id'), nullable=False)
-    period_id = db.Column(db.Integer, db.ForeignKey('period.id'), nullable=False)
+    amount_id = db.Column(db.Integer, db.ForeignKey('donation_amount.id'), nullable=False)
+    period_id = db.Column(db.Integer, db.ForeignKey('donation_period.id'), nullable=False)
     donater_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
