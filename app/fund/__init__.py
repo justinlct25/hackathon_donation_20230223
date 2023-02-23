@@ -5,6 +5,11 @@ import os
 
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '<insert your secret key here>'
+
+# suppress SQLAlchemy warning
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
