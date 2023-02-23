@@ -14,6 +14,7 @@ class RegistrationForm(FlaskForm):
   submit = SubmitField('Register')
 
   def validate_username(self, username):
+    print(username)
     user = User.query.filter_by(username=username.data).first()
     if user is not None:
       flash('Username already exist. Please choose a different one.')
@@ -36,4 +37,7 @@ class AddProjectForm(FlaskForm):
   funding_target = IntegerField('Funding Target', validators=[DataRequired()])
   before_date = DateField('Before Date')
   
+class AddGoalForm(FlaskForm):
+  name = StringField('Name', validators=[DataRequired()])
+  funding_required = IntegerField('Funding Required', validators=[DataRequired()])
   

@@ -3,3 +3,6 @@ source .venv/bin/activate
 
 
 sqlite3 fund.db
+
+flask db migrate -m "Initial migration."
+flask db upgrade

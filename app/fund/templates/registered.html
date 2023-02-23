@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <title>DevSky</title>
+</head>
+
+<body>
+    {% extends "layout.html" %} {% block content %}
+    <div class="outer-container login">
+        <div class="app-name">DevSky</div>
+        <div>A connection platform for Software Developers</div>
+        <h1>Thanks for registering with us!</h1>
+        <p class="btn btn-info" style="margin-top:1rem"><a href="{{ url_for('home') }}" class="header">Login</a></p>
+    </div>
+    {% endblock content %}
+</body>
+
+</html>

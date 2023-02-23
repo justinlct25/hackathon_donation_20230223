@@ -1,5 +1,21 @@
-{% extends "layout.html" %} {% block content %}
-<div>
-    {{project.name}}
-</div>
+{% extends "layout.html" %}
+{% block content %}
+    <div>
+        <b>{{project.name}}</b>
+        <div>Description: {{project.descripiton}}</div>
+        <div>Service Target: {{project.service_target}}</div>
+        <div>Funding target: {{project.funding_target}}</div>
+        <div>Expired date: {{project.before_date}}</div>
+        <div>Posted date: {{project.post_date}}</div>
+    </div>
+    <div>&nbsp</div>
+    <div>Goals</div>
+    {% if project.goals %}
+        {% for goal in project.goals %}
+            <div class="goal">
+                {{ goal.name }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <a href="{{url_for('addGoal', prj_id=project.id)}}">Add Goal</a>
 {% endblock content %}
