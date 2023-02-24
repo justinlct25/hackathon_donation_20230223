@@ -27,3 +27,7 @@ function btns_event_listener(btns, obj, key, hide_btns = null) {
         })
     }
 }
+
+function getVars(vars) {
+    return vars
+}
