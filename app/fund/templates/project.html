@@ -33,6 +33,21 @@
 {% extends "layout.html" %}
 {% block content %}
     <div>
+        <div class="bg-white shadow rounded overflow-hidden">
+            <div class="px-4 pt-0 pb-4 bg-dark">
+                <div class="media align-items-end profile-header">
+                    <div class="profile mr-3"><img src="../static/images/duck.jpg" alt="..." width="130" class="rounded mb-2 img-thumbnail"></div>
+                    <div class="media-body mb-5 text-white">
+                        <h4 class="mt-0 mb-0">Quack</h4>
+                        <p class="small mb-4"> <i class="fa fa-map-marker mr-2"></i>Cardiff, Wales</p>
+                        <div id="social-media">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=nptmind.org.uk/" target="_blank" rel="noopener" class="fa fa-facebook"></a>
+                            <a href="http://twitter.com/share?text=Join me to support mental health&url=https://nptmind.org.uk/&hashtags=NPTmind" class="fa fa-twitter twitter-share-button"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <h1>{{project.name}}</h1>
         <div id="managers-container">
             <div>Managers:</div>
@@ -60,7 +75,7 @@
             </div>
         {% endfor %}
     {% endif %}
-    <div>Donaters</div>
+    <div>Donors</div>
     {% for donater in project.donaters %}
         <div>
             <a href="{{ url_for('profile', user_id=user.id) }}">{{ donater.username }}</a>{{ donater.donated_amount }}
@@ -114,11 +129,18 @@
     <div id="comment">
         <form method="POST" action="/comment/{{project.id}}">
             {{ comment_form.csrf_token }}
-            {# <label for="comment">Discussion: </label> #}
-            {# <textarea id="comment-box" name="comment"></textarea> #}
-            {{ comment_form.comment.label }}
-            {{ comment_form.comment }}
-            <button type="submit">Send message →</button>
+                <div class="panel">
+                    <div class="panel-body">
+                    {{ comment_form.comment.label }}
+                    {{ comment_form.comment (class="form-control", rows="2", placeholder="What are you thinking?") }}
+                    <div class="mar-top clearfix">
+                        <button class="btn btn-sm btn-primary pull-right" type="submit"><i class="fa fa-pencil fa-fw"></i> Share</button>
+                        <a class="btn btn-trans btn-icon fa fa-video-camera add-tooltip" href="#"></a>
+                        <a class="btn btn-trans btn-icon fa fa-camera add-tooltip" href="#"></a>
+                        <a class="btn btn-trans btn-icon fa fa-file add-tooltip" href="#"></a>
+                    </div>
+                    </div>
+                </div>
         </form>
     </div>
 {% endif %}

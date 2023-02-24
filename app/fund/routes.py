@@ -75,6 +75,7 @@ def project(prj_id):
     periods = DonationPeriod.query.all()
     amounts = DonationAmount.query.all()
     is_manager = True if user in project.managers else False
+    donation_plan = DonationPlan.query.filter(DonationPlan.donater_id.like(current_user.id))
     comment_form = ProjectCommentForm()
     return render_template('project.html', user=user, is_manager=is_manager, project=project, periods=periods, amounts=amounts, comment_form=comment_form)
 
@@ -115,7 +116,7 @@ def addDonation(prj_id):
     user.donate_records.append(record)
     if current_user.is_authenticated and json['is_period']:
         period = DonationPeriod.query.get_or_404(json['period_id'])
-        plan = DonationPlan(donater_id=user_id)
+        plan = DonationPlan(donater_id=user_id, project_id=prj_id)
         plan.amount.append(amount)
         plan.period.append(period)
         plan.records.append(record)
@@ -125,7 +126,7 @@ def addDonation(prj_id):
     return redirect(url_for('project', prj_id=prj_id))
 
 def send_email(name, email, project, amount):
-  msg = Message("Thank you for supporting NPT Mind.", sender='lyantung0822@gmail.com', recipients=email)
+  msg = Message("Thank you for supporting NPT Mind.", sender='lyantung0822@gmail.com', recipients=[email])
   msg.body = """
   Dear %s,
   
