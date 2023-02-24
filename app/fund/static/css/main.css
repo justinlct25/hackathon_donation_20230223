@@ -32,11 +32,10 @@ h1 {
     color: white;
     font-size: 200%;
 } */
-
-    body {
-        background-color: #865DFF;
-    }
-
+        
+        body {
+            background-color: #e6deff;
+        }
         /* Campaign page - profile banner */
         
         #banner-wrapper {
@@ -206,4 +205,36 @@ h1 {
         #managers-container {
             display: flex;
             flex-direction: row;
+        }
+        
+        .portfolio-user-icon {
+            text-align: center;
+            position: relative;
+        }
+        
+        .portfolio-user-icon img {
+            height: 2rem;
+            width: 2rem;
+            border-radius: 50%;
+            vertical-align: middle;
+        }
+        
+        .profile-header {
+            padding-top: 2rem;
+        }
+        
+        .project-information-container {
+            padding: 2rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        
+        .right {
+            width: 30%;
+            padding-left: 2rem;
+        }
+        
+        #comment {
+            padding: 2rem;
         }
