@@ -1,12 +1,7 @@
-<div id="flask-msg">
-        {% with messages = get_flashed_messages() %} {% if messages %}
-        <ul class=flashes>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %} {% endwith %}
-    </div>
+{% set active_page = 'login'%}
+{% extends "layout.html" %}
+{% block content %}
+
 <div class="outer-container login">
     <div class="app-name">Donation</div>
     <div>A donation platform</div>
@@ -24,3 +19,5 @@
         <a href="{{ url_for('register') }}" class="header">Register</a>
     </form>
 </div>
+{% endblock content %}
+

@@ -7,7 +7,6 @@ from flask import flash
 class RegistrationForm(FlaskForm):
   # username = StringField('Username',validators=[DataRequired(),Regexp('^[a-z]{6,8}$',message='Your username should be between 6 and 8 characters long, and can only contain lowercase letters.'),EqualTo('confirm_username', message='Usernames do not match. Try again')])
   username = StringField('Username',validators=[DataRequired(),Regexp('^[a-z0-9]{6,14}$',message='Your username should be between 6 and 12 characters long, and can only contain lowercase letters.')])
-  # confirm_username = StringField('Username',validators=[DataRequired()])
   password = PasswordField('Password',validators=[DataRequired(), EqualTo('confirm_password', message='Passwords do not match. Try again')])
   email = StringField('Email', validators=[DataRequired()])
   confirm_password = PasswordField('Password',validators=[DataRequired()])
@@ -40,4 +39,4 @@ class AddProjectForm(FlaskForm):
 class AddGoalForm(FlaskForm):
   name = StringField('Name', validators=[DataRequired()])
   funding_required = IntegerField('Funding Required', validators=[DataRequired()])
-  
+

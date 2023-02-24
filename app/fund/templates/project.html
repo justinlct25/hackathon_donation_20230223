@@ -17,5 +17,9 @@
             </div>
         {% endfor %}
     {% endif %}
-    <a href="{{url_for('addGoal', prj_id=project.id)}}">Add Goal</a>
+    {% if is_manager %}
+        <a href="{{url_for('addGoal', prj_id=project.id)}}">Add Goal</a>
+    {% else %}
+        <div>donate</div>
+    {% endif %}
 {% endblock content %}

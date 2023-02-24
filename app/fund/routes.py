@@ -8,11 +8,12 @@ import random
 @app.route('/')
 @app.route('/home')
 def home():
-    # user = User.query.get(current_user.id)
-    return render_template('index.html')
-    user = User.query.get(current_user.id)
     projects = Project.query.all()
-    return render_template('index.html', user=user, projects=projects)
+    print(current_user)
+    if current_user.is_authenticated:
+        user = User.query.get(current_user.id)
+        return render_template('index.html', user=user, projects=projects)
+    return render_template('index.html', projects=projects)
 
 @app.route("/login", methods=['GET','POST'])
 def login():
@@ -71,7 +72,8 @@ def project(prj_id):
     user= User.query.get(current_user.id)
     project = Project.query.get_or_404(prj_id)
     print(project.managers)
-    return render_template('project.html', user=user, project=project)
+    is_manager = True if user in project.managers else False
+    return render_template('project.html', user=user, is_manager=is_manager, project=project)
 
 @app.route("/addgoal/<int:prj_id>", methods=['GET', 'POST'])
 @login_required
