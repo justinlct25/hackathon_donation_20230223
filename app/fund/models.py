@@ -54,6 +54,9 @@ class User(UserMixin,db.Model):
     hashed_password=db.Column(db.String(128))
     icon = db.Column(db.Text, nullable=True, default="user_default_1.png")
     donated_amount = db.Column(db.Integer, default=0)
+    donate_records =  db.relationship('DonationRecord', backref='user', lazy=True)
+    denote_plans = db.relationship('DonationPlan', backref='user', lazy=True)
+    comments = db.relationship('ProjectComment', backref='user', lazy=True)
 
     @property
     def password(self):
@@ -96,6 +99,7 @@ class Project(db.Model):
     donations = db.relationship('DonationRecord', backref='project', lazy=True) # one-to-many
     donaters = db.relationship('User', secondary=project_donator_association_table, backref='donated_prjs') # many-to-many
     goals = db.relationship('ProjectGoal', backref='project', lazy=True) # one-to-many
+    comments = db.relationship('ProjectComment', backref='project', lazy=True)
 
 class ProjectGoal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -142,7 +146,14 @@ class DonationRecord(db.Model):
     amount = db.Column(db.Integer, nullable=False)
     plan_id = db.Column(db.Integer, db.ForeignKey('donation_plan.id'))
 
+class ProjectComment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.Text, nullable=False, default="")
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
+    
 
 
 
