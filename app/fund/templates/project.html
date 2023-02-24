@@ -1,12 +1,48 @@
+<head>
+    <script type="text/javascript" src="{{ url_for('static', filename='helper.js') }}"></script>
+    <script>
+        window.onload = function() {
+            let donation_selection = {
+                is_period: 1,
+                amount_id: 1,
+                period_id: 1,
+            }
+            const oneoff_btns = document.getElementsByClassName("oneoff-btn");
+            const amount_btns = document.getElementsByClassName("amount-btn");
+            const period_btns = document.getElementsByClassName("period-btn");
+            btns_event_listener(oneoff_btns, donation_selection, "is_period", period_btns);
+            btns_event_listener(amount_btns, donation_selection, "amount_id");
+            btns_event_listener(period_btns, donation_selection, "period_id");
+            document.getElementById("donation-fetch-btn").addEventListener("click", async () => {
+                try {
+                    const res = await fetch('/donation/{{project.id}}', {
+                        "method": "POST",
+                        "headers": {"Content-Type": "application/json"},
+                        "body": JSON.stringify(donation_selection),
+                    })
+                    window.location.href = res.url;
+                } catch (error) {
+                    console.log("error");
+                }
+            })
+            console.log(donation_selection)
+        }
+    </script>
+</head>
+
 {% extends "layout.html" %}
 {% block content %}
     <div>
-        <b>{{project.name}}</b>
-        <div>Description: {{project.descripiton}}</div>
-        <div>Service Target: {{project.service_target}}</div>
-        <div>Funding target: {{project.funding_target}}</div>
-        <div>Expired date: {{project.before_date}}</div>
-        <div>Posted date: {{project.post_date}}</div>
+        <h1>{{project.name}}</h1>
+            <div id="story">
+                <h3>Story behind this campaign:</h3>
+                <div>{{project.description}}</div>
+            </div>
+            <div>Service Target: {{project.service_target}}</div>
+            <div>Funding target: {{project.funding_target}}</div>
+            <div>Expired date: {{project.before_date}}</div>
+            <div>Posted date: {{project.post_date}}</div>
+        </div>
     </div>
     <div>&nbsp</div>
     <div>Goals</div>
@@ -17,5 +53,32 @@
             </div>
         {% endfor %}
     {% endif %}
-    <a href="{{url_for('addGoal', prj_id=project.id)}}">Add Goal</a>
+    <div>Donaters</div>
+    {% for donater in project.donaters %}
+        <div>{{ donater.username }} {{ donater.donated_amount }}</div>
+    {% endfor %}
+    {% if is_manager %}
+        <a href="{{url_for('addGoal', prj_id=project.id)}}">Add Goal</a>
+    {% else %}
+    <div id="side-donataion-box">
+        <h2>Donation</h2>
+        <div class="flex">
+            <div id="0" class="donation-btn oneoff-btn">One-off</div>
+            <div id="1" class="donation-btn oneoff-btn selected-donate-option">Periodly</div>
+        </div>
+        <div class="flex">
+            {% for amount in amounts %}
+                <div id="{{ amount.id }}" class="donation-btn amount-btn {{'selected-donate-option' if loop.index == 1 else ''}} ">£{{ amount.amount }} </div>
+            {% endfor %}
+        </div>
+        <div id="period-container" class="flex">
+            {% for period in periods %}
+                <div id="{{ period.id }}" class="donation-btn period-btn {{'selected-donate-option' if loop.index == 1 else ''}}">{{ period.period.title() }}</div>
+            {% endfor %}
+        </div>
+        <div id="donation-fetch-btn">
+            Donate
+        </div>
+    </div>
+    {% endif %}
 {% endblock content %}

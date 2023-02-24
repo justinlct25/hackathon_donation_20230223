@@ -1,35 +1,22 @@
-{% extends "layout.html" %} 
+{% set active_page = 'home'%}
+{% extends "layout.html" %}
 {% block content %}
-<!-- <div class="project-list-container">
-    {% for project in projects %}
-        <div class="project-brief">
-            {{ project.name }}
-            <a href="{{ url_for('project', prj_id=project.id) }}">view</a>
-        </div>
-    {% endfor %} -->
-    <br>
-    
-    <div class ="row_container">
-        asfjsldj
-    </div>
-
+<div class="project-list-container">
     <div class="container">
         <h1>Our current trending projects</h1>
     <br>
         <div class="row card-deck">
             {% for project in projects %}
-            <div class="col-4 mb-4">
-              <div class="card h-100">
-               
-                <div class="card-body">
-                  <h5 class="card-title">{{ project.name }}</h5>
-                  <p class="card-text">{{ project.description }}</p>
-                  <p class="card-text"><small class="text-muted">Created: {{ project.post_date }}</small></p>
-                  <a href="{{ url_for('project', prj_id=project.id) }}">view</a>
+                <div class="col-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.name }}</h5>
+                            <p class="card-text">{{ project.description }}</p>
+                            <p class="card-text"><small class="text-muted">Created: {{ project.post_date }}</small></p>
+                            <a href="{{ url_for('project', prj_id=project.id) }}">view</a>
+                        </div>
+                    </div>
                 </div>
-                  
-              </div>
-            </div>
             {% endfor %}
         </div>
     

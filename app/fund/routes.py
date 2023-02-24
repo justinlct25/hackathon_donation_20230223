@@ -1,15 +1,19 @@
-from fund import app, db
+from fund import app, db, mail
 from flask import render_template, url_for, request, jsonify, redirect, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
-from fund.models import User, Project, ProjectGoal
+from flask_mail import Mail, Message
+from fund.models import User, Project, ProjectGoal, DonationPeriod, DonationAmount, DonationPlan, DonationRecord
 from fund.forms import RegistrationForm, LoginForm, AddProjectForm, AddGoalForm
 import random
 
 @app.route('/')
 @app.route('/home')
 def home():
-    # user = User.query.get(current_user.id)
     projects = Project.query.all()
+    print(current_user)
+    if current_user.is_authenticated:
+        user = User.query.get(current_user.id)
+        return render_template('index.html', user=user, projects=projects)
     return render_template('index.html', projects=projects)
 
 @app.route("/login", methods=['GET','POST'])
@@ -23,7 +27,7 @@ def login():
       flash('You\'ve successfully logged in,'+' '+ current_user.username +'!')
       return redirect(url_for('home'))
     flash('Invalid username or password.')
-  return render_template('login.html',title='Login', form=form)
+  return render_template('login_blue.html',title='Login', form=form)
 
 @app.route("/logout")
 def logout():
@@ -68,8 +72,10 @@ def addProject():
 def project(prj_id):
     user= User.query.get(current_user.id)
     project = Project.query.get_or_404(prj_id)
-    print(project.managers)
-    return render_template('project.html', user=user, project=project)
+    periods = DonationPeriod.query.all()
+    amounts = DonationAmount.query.all()
+    is_manager = True if user in project.managers else False
+    return render_template('project.html', user=user, is_manager=is_manager, project=project, periods=periods, amounts=amounts)
 
 @app.route("/addgoal/<int:prj_id>", methods=['GET', 'POST'])
 @login_required
@@ -88,3 +94,46 @@ def addGoal(prj_id):
         flash("Goal added")
         return redirect(url_for('project', prj_id=project.id))
     return render_template('addgoal.html', user=user, project=project, form=form)
+
+@app.route("/donation/<int:prj_id>", methods=['GET', 'POST'])
+def addDonation(prj_id):
+    json = request.json
+    amount = DonationAmount.query.get_or_404(json['amount_id'])
+    if current_user.is_authenticated:
+        user = User.query.get(current_user.id)
+        project = Project.query.get(prj_id)
+        project.donaters.append(user)
+        user_id = current_user.id
+    else:
+        user_id = 0
+    record = DonationRecord(donater_id=user_id, project_id=prj_id, amount=amount.amount)
+    db.session.add(record)
+    db.session.flush()
+    db.session.refresh(record)
+    user.donated_amount = int(user.donated_amount or 0) + amount.amount
+    if current_user.is_authenticated and json['is_period']:
+        period = DonationPeriod.query.get_or_404(json['period_id'])
+        plan = DonationPlan(donater_id=user_id)
+        plan.amount.append(amount)
+        plan.period.append(period)
+        plan.records.append(record)
+        db.session.add(plan)
+    db.session.commit()
+    send_email(user.username, user.email, project.name, amount.amount)
+    return redirect(url_for('project', prj_id=prj_id))
+
+def send_email(name, email, project, amount):
+  msg = Message("Thank you for supporting NPT Mind.", sender='lyantung0822@gmail.com', recipients=email)
+  msg.body = """
+  Dear %s,
+  
+  Thank you for joining our fight for mental health with NPT Mind. Your donation can make a difference in our community! 
+  
+  Here is your receipt for the donation that you have made:
+  
+  Donor's name: %s
+  Campaign: %s
+  Donation amount: %s
+  """ % (name, name, project, amount)
+
+  mail.send(msg)
