@@ -1,8 +1,8 @@
 from fund import app, db
 from flask import render_template, url_for, request, jsonify, redirect, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
-from fund.models import User, Project, ProjectGoal, DonationPeriod, DonationAmount, DonationPlan, DonationRecord
-from fund.forms import RegistrationForm, LoginForm, AddProjectForm, AddGoalForm
+from fund.models import User, Project, ProjectGoal, DonationPeriod, DonationAmount, DonationPlan, DonationRecord, ProjectComment
+from fund.forms import RegistrationForm, LoginForm, AddProjectForm, AddGoalForm, ProjectCommentForm
 import random
 
 @app.route('/')
@@ -74,7 +74,8 @@ def project(prj_id):
     periods = DonationPeriod.query.all()
     amounts = DonationAmount.query.all()
     is_manager = True if user in project.managers else False
-    return render_template('project.html', user=user, is_manager=is_manager, project=project, periods=periods, amounts=amounts)
+    comment_form = ProjectCommentForm()
+    return render_template('project.html', user=user, is_manager=is_manager, project=project, periods=periods, amounts=amounts, comment_form=comment_form)
 
 @app.route("/addgoal/<int:prj_id>", methods=['GET', 'POST'])
 @login_required
@@ -110,6 +111,7 @@ def addDonation(prj_id):
     db.session.flush()
     db.session.refresh(record)
     user.donated_amount = int(user.donated_amount or 0) + amount.amount
+    user.donate_record.append(record)
     if current_user.is_authenticated and json['is_period']:
         period = DonationPeriod.query.get_or_404(json['period_id'])
         plan = DonationPlan(donater_id=user_id)
@@ -119,3 +121,21 @@ def addDonation(prj_id):
         db.session.add(plan)
     db.session.commit()
     return redirect(url_for('project', prj_id=prj_id))
+
+@app.route("/comment/<int:prj_id>", methods=['POST'])
+@login_required
+def comment(prj_id):
+    form = ProjectCommentForm()
+    comment = ProjectComment(comment=form.comment.data, project_id=prj_id, user_id=current_user.id)
+    db.session.add(comment)
+    db.session.commit()
+    return redirect(url_for("project", prj_id=prj_id))
+
+@app.route("/profile/<int:user_id>", methods=["GET"])
+def profile(user_id):
+    if current_user.is_authenticated:
+        is_owner = user_id == current_user.id
+    else:
+        is_owner = False   
+    user = User.query.get_or_404(user_id)
+    return render_template('profile.html', is_owner=is_owner, user=user)

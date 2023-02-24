@@ -40,3 +40,6 @@ class AddGoalForm(FlaskForm):
   name = StringField('Name', validators=[DataRequired()])
   funding_required = IntegerField('Funding Required', validators=[DataRequired()])
 
+class ProjectCommentForm(FlaskForm):
+  comment = TextAreaField("Comment", validators=[DataRequired()])
+  

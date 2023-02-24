@@ -1,0 +1,18 @@
+{% set active_page = 'login'%}
+{% extends "layout.html" %}
+{% block content %}
+<div class="outer-container login">
+    <div class="app-name">DevSky</div>
+    <div>A connection platform for Software Developers</div>
+    <div class="info-title" style="margin-top:2rem">Register</div>
+    <form method="POST" action="">
+        {{ form.csrf_token }}
+        <p> {{ form.username.label }} {{ form.username }} </p>
+        <p> {{ form.email.label }} {{ form.email }} </p>
+        <p> {{ form.password.label }} {{ form.password }} </p>
+        <p> {{ form.confirm_password.label }} {{ form.confirm_password }} </p>
+        <input class="btn btn-info" type="submit" value="Register">
+        <p style="margin-top:1rem"><a href="{{ url_for('home') }}" class="header">Login</a></p>
+    </form>
+</div>
+{% endblock content %}
