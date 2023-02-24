@@ -26,7 +26,7 @@ def login():
       flash('You\'ve successfully logged in,'+' '+ current_user.username +'!')
       return redirect(url_for('home'))
     flash('Invalid username or password.')
-  return render_template('login.html',title='Login', form=form)
+  return render_template('login_blue.html',title='Login', form=form)
 
 @app.route("/logout")
 def logout():

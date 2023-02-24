@@ -17,10 +17,12 @@ function btns_event_listener(btns, obj, key, hide_btns = null) {
             clear_class(btns, "selected-donate-option");
             event.target.classList.add("selected-donate-option")
             console.log(obj)
-            if (obj[key] == 0 && hide_btns) {
-                add_class(hide_btns, "hide");
-            } else {
-                clear_class(hide_btns, "hide");
+            if (hide_btns) {
+                if (obj[key] == 0 && hide_btns) {
+                    add_class(hide_btns, "hide");
+                } else {
+                    clear_class(hide_btns, "hide");
+                }
             }
         })
     }
