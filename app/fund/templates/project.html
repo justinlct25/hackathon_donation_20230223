@@ -7,6 +7,10 @@
                 amount_id: 1,
                 period_id: 1,
             }
+            {# console.log(getVars('{{donation_plan}}'))
+            if (getVars('{{donation_plan}}')) {
+                donation_selection.is_period = 0;
+            } #}
             const oneoff_btns = document.getElementsByClassName("oneoff-btn");
             const amount_btns = document.getElementsByClassName("amount-btn");
             const period_btns = document.getElementsByClassName("period-btn");
@@ -69,26 +73,46 @@
     {% if is_manager %}
         <a href="{{url_for('addGoal', prj_id=project.id)}}">Add Goal</a>
     {% else %}
-    <div id="side-donataion-box">
-        <h2>Donation</h2>
-        <div class="flex">
-            <div id="0" class="donation-btn oneoff-btn">One-off</div>
-            <div id="1" class="donation-btn oneoff-btn selected-donate-option">Periodly</div>
-        </div>
-        <div class="flex">
-            {% for amount in amounts %}
-                <div id="{{ amount.id }}" class="donation-btn amount-btn {{'selected-donate-option' if loop.index == 1 else ''}} ">£{{ amount.amount }} </div>
-            {% endfor %}
-        </div>
-        <div id="period-container" class="flex">
-            {% for period in periods %}
-                <div id="{{ period.id }}" class="donation-btn period-btn {{'selected-donate-option' if loop.index == 1 else ''}}">{{ period.period.title() }}</div>
-            {% endfor %}
-        </div>
-        <div id="donation-fetch-btn">
-            Donate
-        </div>
-    </div>
+        {% if donation_plan %}
+            <div id="donation-plan">
+                <div>Current Donation Plan</div>
+                £{{donation_plan.amount[0].amount}} {{donation_plan.period[0].period}}
+                <a href="{{ url_for('deleteDonationPlan', prj_id=project.id, plan_id=donation_plan.id) }}">Delete</a>
+            </div>
+            <div id="side-donataion-box">
+                <h2>Donation</h2>
+                <div class="flex">
+                    <div id="0" class="donation-btn oneoff-bt selected-donate-option">One-off</div>
+                </div>
+                <div class="flex">
+                    {% for amount in amounts %}
+                        <div id="{{ amount.id }}" class="donation-btn amount-btn {{'selected-donate-option' if loop.index == 1 else ''}} ">£{{ amount.amount }} </div>
+                    {% endfor %}
+                </div>
+                <div id="donation-fetch-btn">Donate</div>
+            </div>
+        {% else %}
+            <div id="side-donataion-box">
+                <h2>Donation</h2>
+                <div class="flex">
+                    <div id="0" class="donation-btn oneoff-btn">One-off</div>
+                    <div id="1" class="donation-btn oneoff-btn selected-donate-option">Periodly</div>
+                </div>
+                <div class="flex">
+                    {% for amount in amounts %}
+                        <div id="{{ amount.id }}" class="donation-btn amount-btn {{'selected-donate-option' if loop.index == 1 else ''}} ">£{{ amount.amount }} </div>
+                    {% endfor %}
+                </div>
+                <div id="period-container" class="flex">
+                    {% for period in periods %}
+                        <div id="{{ period.id }}" class="donation-btn period-btn {{'selected-donate-option' if loop.index == 1 else ''}}">{{ period.period.title() }}</div>
+                    {% endfor %}
+                </div>
+                <div id="donation-fetch-btn">
+                    Donate
+                </div>
+            </div>
+        {% endif %}
     {% endif %}
     <div id="discussion" class="container">
     <div class="row">
@@ -98,7 +122,7 @@
                 <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="../static/images/duck.jpg" alt="Image Description">
                 <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
                 <div class="g-mb-15">
-                    <a href="{{ url_for('profile', user_id=comment.user.id) }}"">
+                    <a href="{{ url_for('profile', user_id=comment.user.id) }}">
                         <h5 class="h5 g-color-gray-dark-v1 mb-0">{{comment.user.username}}</h5>
                     </a>
                     <span class="g-color-gray-dark-v4 g-font-size-12">{{comment.date}}</span>

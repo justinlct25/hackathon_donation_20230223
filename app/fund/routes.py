@@ -74,9 +74,9 @@ def project(prj_id):
     periods = DonationPeriod.query.all()
     amounts = DonationAmount.query.all()
     is_manager = True if user in project.managers else False
-    donation_plan = DonationPlan.query.filter(DonationPlan.donater_id.like(current_user.id))
+    donation_plan = DonationPlan.query.filter(DonationPlan.donater_id.like(current_user.id), DonationPlan.project_id.like(prj_id)).first()
     comment_form = ProjectCommentForm()
-    return render_template('project.html', user=user, is_manager=is_manager, project=project, periods=periods, amounts=amounts, comment_form=comment_form)
+    return render_template('project.html', user=user, is_manager=is_manager, project=project, periods=periods, amounts=amounts, comment_form=comment_form, donation_plan=donation_plan)
 
 @app.route("/addgoal/<int:prj_id>", methods=['GET', 'POST'])
 @login_required
@@ -118,8 +118,17 @@ def addDonation(prj_id):
         plan = DonationPlan(donater_id=user_id, project_id=prj_id)
         plan.amount.append(amount)
         plan.period.append(period)
-        plan.records.append(record)
+        record.plan = str(amount.amount) + str(period.period)
         db.session.add(plan)
+    db.session.commit()
+    return redirect(url_for('project', prj_id=prj_id))
+
+@app.route("/delete_donation_plan/<int:prj_id>/<int:plan_id>", methods=['GET','POST'])
+@login_required
+def deleteDonationPlan(prj_id, plan_id):
+    # DonationPlan.query.filter_by(id=plan_id).delete()
+    plan = DonationPlan.query.get_or_404(plan_id)
+    plan.donater_id = 1
     db.session.commit()
     return redirect(url_for('project', prj_id=prj_id))
 
