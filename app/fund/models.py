@@ -135,6 +135,7 @@ class DonationPeriod(db.Model):
 class DonationPlan(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     donater_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     amount = db.relationship('DonationAmount', secondary=plan_amount_association_table, backref="donate_plan")
     period = db.relationship('DonationPeriod', secondary=plan_period_association_table, backref="donate_plan")
     records = db.relationship('DonationRecord', backref='plan', lazy=True) # one-to-many
@@ -142,7 +143,7 @@ class DonationPlan(db.Model):
 class DonationRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     donater_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), default=0)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     amount = db.Column(db.Integer, nullable=False)
     plan_id = db.Column(db.Integer, db.ForeignKey('donation_plan.id'))
 
