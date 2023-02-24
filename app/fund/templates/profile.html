@@ -1,13 +1,35 @@
 {% set active_page = 'profile'%}
 {% extends "layout.html" %}
 {% block content %}
-{{user.username}}
-Email: {{user.email}}
-Total donated: {{user.donated_amount}}
-{% if donate_records %}
-    {% for record in donate_records %}
-        <div>Project: {{record.project.name}}</div>
-        <div>Amount: {{record.amount}}</div>
-    {% endfor %}
-{% endif %}
+<div style="padding: 2rem">
+    <div class="bg-white shadow rounded overflow-hidden">
+            <div class="px-4 pt-0 pb-4 bg-dark">
+                <div class="media align-items-end profile-header">
+                    <div class="flex">
+                        <div class="profile mr-3"><img src="../static/images/duck.jpg" alt="..." width="130" class="rounded mb-2 img-thumbnail"></div>
+                        <div class="media-body mb-5 text-white" style="padding-left: 2rem">
+                            <h1 class="mt-0 mb-0">{{user.username}}</h1>
+                            <div id="managers-container">
+                                <div style="padding-right: 2rem">Email: {{user.email}}</div>
+                                <div>Total donated: {{user.donated_amount}}</div>
+                            </div>
+                            <p class="small mb-4"> <i class="fa fa-map-marker mr-2"></i>Cardiff, Wales</p>
+                            <div id="social-media">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u=nptmind.org.uk/" target="_blank" rel="noopener" class="fa fa-facebook"></a>
+                                <a href="http://twitter.com/share?text=Join me to support mental health&url=https://nptmind.org.uk/&hashtags=NPTmind" class="fa fa-twitter twitter-share-button"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% if user.donate_records %}
+        {% for record in user.donate_records %}
+            <div class="flex">
+                <div style="margin-right: 2rem">Project: {{record.project.name}}</div>
+                <div>Amount: {{record.amount}}</div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
 {% endblock content %}

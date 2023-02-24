@@ -1,9 +1,21 @@
 {% extends "layout.html" %}
 {% block content %}
 <div id="banner-wrapper">
-    <div class="banner"><img src="../static/images/banner.jpg"></div>
-    <div class="propic"><img src="../static/images/duck.jpg"></div>
-    <p>Name</p>
+    <!-- <div class="banner"><img src="../static/images/banner.jpg"></div> -->
+    <!-- <div class="propic"><img src="../static/images/duck.jpg"></div> -->
+    <!-- <p>Name</p> -->
+
+    <div class="bg-white shadow rounded overflow-hidden">
+        <div class="px-4 pt-0 pb-4 bg-dark">
+            <div class="media align-items-end profile-header">
+                <div class="profile mr-3"><img src="../static/images/duck.jpg" alt="..." width="130" class="rounded mb-2 img-thumbnail"></div>
+                <div class="media-body mb-5 text-white">
+                    <h4 class="mt-0 mb-0">Quack</h4>
+                    <p class="small mb-4"> <i class="fa fa-map-marker mr-2"></i>Cardiff, Wales</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div id="campaign-hero">
     <div id="story">
@@ -71,10 +83,16 @@
     </div>
 </div>
 <div id="comment">
-    <form>
-        <label for="comment">Discussion: </label>
-        <textarea id="comment-box" name="comment"></textarea>
-        <button type="submit">Send message →</button>
-    </form>
+    <div class="panel">
+        <div class="panel-body">
+          <textarea class="form-control" rows="2" placeholder="What are you thinking?"></textarea>
+          <div class="mar-top clearfix">
+            <button class="btn btn-sm btn-primary pull-right" type="submit"><i class="fa fa-pencil fa-fw"></i> Share</button>
+            <a class="btn btn-trans btn-icon fa fa-video-camera add-tooltip" href="#"></a>
+            <a class="btn btn-trans btn-icon fa fa-camera add-tooltip" href="#"></a>
+            <a class="btn btn-trans btn-icon fa fa-file add-tooltip" href="#"></a>
+          </div>
+        </div>
+    </div>
 </div>
 {% endblock content %}

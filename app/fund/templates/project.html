@@ -32,88 +32,118 @@
             console.log(donation_selection)
         }
     </script>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/main.css') }}">
+
 </head>
 
 {% extends "layout.html" %}
 {% block content %}
     <div>
-        <h1>{{project.name}}</h1>
-        <div id="managers-container">
-            <div>Managers:</div>
-            {% for manager in project.managers %}
+        <div class="bg-white shadow rounded overflow-hidden">
+            <div class="px-4 pt-0 pb-4 bg-dark">
+                <div class="media align-items-end profile-header">
+                    <div class="flex">
+                        <div class="profile mr-3"><img src="../static/images/duck.jpg" alt="..." width="130" class="rounded mb-2 img-thumbnail"></div>
+                        <div class="media-body mb-5 text-white" style="padding-left: 2rem">
+                            <h1 class="mt-0 mb-0">{{project.name}}</h1>
+                            <div id="managers-container">
+                            <div>Managers: </div>
+                                {% for manager in project.managers %}
+                                    <div>
+                                        <a href="{{url_for('profile', user_id=manager.id)}}">{{manager.username}}</a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <p class="small mb-4"> <i class="fa fa-map-marker mr-2"></i>Cardiff, Wales</p>
+                            <div id="social-media">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u=nptmind.org.uk/" target="_blank" rel="noopener" class="fa fa-facebook"></a>
+                                <a href="http://twitter.com/share?text=Join me to support mental health&url=https://nptmind.org.uk/&hashtags=NPTmind" class="fa fa-twitter twitter-share-button"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {# <h1>{{project.name}}</h1> #}
+        
+    </div>
+    <div class="project-information-container">
+        <div class="left">
+            <div id="story">
+                <h3>Story behind this campaign:</h3>
+                <div>{{project.description}}</div>
+            </div>
+            <div>Service Target: {{project.service_target}}</div>
+            <div>Funding target: {{project.funding_target}}</div>
+            <div>Expired date: {{project.before_date}}</div>
+            <div>Posted date: {{project.post_date}}</div>
+            <div class="goal-container">
+                <h4>Goals</h4>
+                {% if project.goals %}
+                    {% for goal in project.goals %}
+                        <div class="goal">
+                            {{ goal.name }} Required funding: {{goal.funding_required}}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    - no goal yet -
+                {% endif %}
+                {% if is_manager %}
+                    <a href="{{url_for('addGoal', prj_id=project.id)}}">Add Goal</a>
+                {% endif %}
+            </div>
+            <h4>Donors</h4>
+            {% for donater in project.donaters %}
                 <div>
-                    <a href="{{url_for('profile', user_id=manager.id)}}">{{manager.username}}</a>
+                    <a href="{{ url_for('profile', user_id=user.id) }}">{{ donater.username }}</a>{{ donater.donated_amount }}
                 </div>
             {% endfor %}
         </div>
-        <div id="story">
-            <h3>Story behind this campaign:</h3>
-            <div>{{project.description}}</div>
+        <div class="right">
+            {% if not is_manager %}
+                {% if donation_plan %}
+                    <h2>Donation</h2>
+                    <div id="side-donataion-box">
+                        <div class="flex">
+                            <div id="0" class="donation-btn oneoff-bt selected-donate-option">One-off</div>
+                        </div>
+                        <div class="flex">
+                            {% for amount in amounts %}
+                                <div id="{{ amount.id }}" class="donation-btn amount-btn {{'selected-donate-option' if loop.index == 1 else ''}} ">£{{ amount.amount }} </div>
+                            {% endfor %}
+                        </div>
+                        <div id="donation-fetch-btn" class="btn btn-info">Donate</div>
+                    </div>
+                    <div id="donation-plan">
+                        <h4>Current Plan</h4>
+                        £{{donation_plan.amount[0].amount}} {{donation_plan.period[0].period}}
+                        <a href="{{ url_for('deleteDonationPlan', prj_id=project.id, plan_id=donation_plan.id) }}">Delete</a>
+                    </div>
+                {% else %}
+                    <div id="side-donataion-box">
+                        <h2>Donation</h2>
+                        <div class="flex">
+                            <div id="0" class=" donation-btn oneoff-btn">One-off</div>
+                            <div id="1" class=" donation-btn oneoff-btn selected-donate-option">Periodly</div>
+                        </div>
+                        <div class="flex">
+                            {% for amount in amounts %}
+                                <div id="{{ amount.id }}" class=" donation-btn amount-btn {{'selected-donate-option' if loop.index == 1 else ''}} ">£{{ amount.amount }} </div>
+                            {% endfor %}
+                        </div>
+                        <div id="period-container" class="flex">
+                            {% for period in periods %}
+                                <div id="{{ period.id }}" class=" donation-btn period-btn {{'selected-donate-option' if loop.index == 1 else ''}}">{{ period.period.title() }}</div>
+                            {% endfor %}
+                        </div>
+                        <div id="donation-fetch-btn" class="btn btn-info">
+                            Donate
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
         </div>
-        <div>Service Target: {{project.service_target}}</div>
-        <div>Funding target: {{project.funding_target}}</div>
-        <div>Expired date: {{project.before_date}}</div>
-        <div>Posted date: {{project.post_date}}</div>
     </div>
-    <div>&nbsp</div>
-    <div>Goals</div>
-    {% if project.goals %}
-        {% for goal in project.goals %}
-            <div class="goal">
-                {{ goal.name }}
-            </div>
-        {% endfor %}
-    {% endif %}
-    <div>Donaters</div>
-    {% for donater in project.donaters %}
-        <div>
-            <a href="{{ url_for('profile', user_id=user.id) }}">{{ donater.username }}</a>{{ donater.donated_amount }}
-        </div>
-    {% endfor %}
-    {% if is_manager %}
-        <a href="{{url_for('addGoal', prj_id=project.id)}}">Add Goal</a>
-    {% else %}
-        {% if donation_plan %}
-            <div id="donation-plan">
-                <div>Current Donation Plan</div>
-                £{{donation_plan.amount[0].amount}} {{donation_plan.period[0].period}}
-                <a href="{{ url_for('deleteDonationPlan', prj_id=project.id, plan_id=donation_plan.id) }}">Delete</a>
-            </div>
-            <div id="side-donataion-box">
-                <h2>Donation</h2>
-                <div class="flex">
-                    <div id="0" class="donation-btn oneoff-bt selected-donate-option">One-off</div>
-                </div>
-                <div class="flex">
-                    {% for amount in amounts %}
-                        <div id="{{ amount.id }}" class="donation-btn amount-btn {{'selected-donate-option' if loop.index == 1 else ''}} ">£{{ amount.amount }} </div>
-                    {% endfor %}
-                </div>
-                <div id="donation-fetch-btn">Donate</div>
-            </div>
-        {% else %}
-            <div id="side-donataion-box">
-                <h2>Donation</h2>
-                <div class="flex">
-                    <div id="0" class="donation-btn oneoff-btn">One-off</div>
-                    <div id="1" class="donation-btn oneoff-btn selected-donate-option">Periodly</div>
-                </div>
-                <div class="flex">
-                    {% for amount in amounts %}
-                        <div id="{{ amount.id }}" class="donation-btn amount-btn {{'selected-donate-option' if loop.index == 1 else ''}} ">£{{ amount.amount }} </div>
-                    {% endfor %}
-                </div>
-                <div id="period-container" class="flex">
-                    {% for period in periods %}
-                        <div id="{{ period.id }}" class="donation-btn period-btn {{'selected-donate-option' if loop.index == 1 else ''}}">{{ period.period.title() }}</div>
-                    {% endfor %}
-                </div>
-                <div id="donation-fetch-btn">
-                    Donate
-                </div>
-            </div>
-        {% endif %}
-    {% endif %}
     <div id="discussion" class="container">
     <div class="row">
         {% for comment in project.comments %}
@@ -138,11 +168,18 @@
     <div id="comment">
         <form method="POST" action="/comment/{{project.id}}">
             {{ comment_form.csrf_token }}
-            {# <label for="comment">Discussion: </label> #}
-            {# <textarea id="comment-box" name="comment"></textarea> #}
-            {{ comment_form.comment.label }}
-            {{ comment_form.comment }}
-            <button type="submit">Send message →</button>
+                <div class="panel">
+                    <div class="panel-body">
+                    {{ comment_form.comment.label }}
+                    {{ comment_form.comment (class="form-control", rows="2", placeholder="What are you thinking?") }}
+                    <div class="mar-top clearfix">
+                        <button class="btn btn-sm btn-primary pull-right" type="submit"><i class="fa fa-pencil fa-fw"></i> Share</button>
+                        <a class="btn btn-trans btn-icon fa fa-video-camera add-tooltip" href="#"></a>
+                        <a class="btn btn-trans btn-icon fa fa-camera add-tooltip" href="#"></a>
+                        <a class="btn btn-trans btn-icon fa fa-file add-tooltip" href="#"></a>
+                    </div>
+                    </div>
+                </div>
         </form>
     </div>
 {% endif %}
