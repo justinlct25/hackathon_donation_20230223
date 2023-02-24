@@ -44,7 +44,7 @@
                         <li class="nav-item">
                             <div class="flex" style="margin-top:0.5rem;">
                                 <a href="{{ url_for('profile', user_id=user.id) }}">{{user.username}} {{user.donated_amount}}</a>
-                                <div class="layout-user-icon"><img src="{{ url_for('static', filename='images/icons/' + user.icon) }}" /></div>
+                                <div class="layout-user-icon portfolio-user-icon"><img src="../static/images/duck.jpg" alt="..." width="130" class="rounded mb-2 img-thumbnail"></div>
                             </div>
                         </li>
                     {% endif %}

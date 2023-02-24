@@ -373,3 +373,15 @@ h1 {
         #story {
             margin-bottom: 1rem
         }
+        
+        .portfolio-user-icon {
+            text-align: center;
+            position: relative;
+        }
+        
+        .portfolio-user-icon img {
+            height: 2rem;
+            width: 2rem;
+            border-radius: 50%;
+            vertical-align: middle;
+        }
