@@ -26,6 +26,24 @@ user_donation_plan_association_table = db.Table('user_donation_plan',
                                                 db.Column('donation_plan_id', db.Integer, db.ForeignKey('donation_plan.id')),
                                                 db.PrimaryKeyConstraint('user_id', 'donation_plan_id')
                                                 )
+
+plan_amount_association_table = db.Table('plan_amount', 
+                                            db.Column('plan_id', db.Integer, db.ForeignKey('donation_plan.id')),
+                                            db.Column('amount_id', db.Integer, db.ForeignKey('donation_amount.id')),
+                                            db.PrimaryKeyConstraint('plan_id', 'amount_id')
+                                        )
+
+plan_period_association_table = db.Table('plan_period', 
+                                            db.Column('plan_id', db.Integer, db.ForeignKey('donation_plan.id')),
+                                            db.Column('period_id', db.Integer, db.ForeignKey('donation_period.id')),
+                                            db.PrimaryKeyConstraint('plan_id', 'period_id')
+                                        )
+
+record_amount_association_table = db.Table('record_amount', 
+                                            db.Column('record_id', db.Integer, db.ForeignKey('donation_record.id')),
+                                            db.Column('amount_id', db.Integer, db.ForeignKey('donation_amount.id')),
+                                            db.PrimaryKeyConstraint('record_id', 'amount_id')
+                                        )
                                         
 
 class User(UserMixin,db.Model):
@@ -35,6 +53,7 @@ class User(UserMixin,db.Model):
     email = db.Column(db.Text, nullable=True, default="")
     hashed_password=db.Column(db.String(128))
     icon = db.Column(db.Text, nullable=True, default="user_default_1.png")
+    donated_amount = db.Column(db.Integer, default=0)
 
     @property
     def password(self):
@@ -74,6 +93,7 @@ class Project(db.Model):
     org_id = db.Column(db.Integer, db.ForeignKey('organization.id'), nullable=True)
     tags = db.relationship('Tag', secondary=project_tag_association_table, backref='projects')
     managers = db.relationship('User', secondary=project_manager_association_table, backref='managing_prjs') # many-to-many
+    donations = db.relationship('DonationRecord', backref='project', lazy=True) # one-to-many
     donaters = db.relationship('User', secondary=project_donator_association_table, backref='donated_prjs') # many-to-many
     goals = db.relationship('ProjectGoal', backref='project', lazy=True) # one-to-many
 
@@ -110,16 +130,18 @@ class DonationPeriod(db.Model):
 
 class DonationPlan(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    amount_id = db.Column(db.Integer, db.ForeignKey('donation_amount.id'), nullable=False)
-    period_id = db.Column(db.Integer, db.ForeignKey('donation_period.id'), nullable=False)
     donater_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    amount = db.relationship('DonationAmount', secondary=plan_amount_association_table, backref="donate_plan")
+    period = db.relationship('DonationPeriod', secondary=plan_period_association_table, backref="donate_plan")
     records = db.relationship('DonationRecord', backref='plan', lazy=True) # one-to-many
 
 class DonationRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    amount_id = db.Column(db.Integer, db.ForeignKey('donation_amount.id'), nullable=False)
-    period_id = db.Column(db.Integer, db.ForeignKey('donation_period.id'), nullable=False)
-    plan_id = db.Column(db.Integer, db.ForeignKey('donation_plan.id'), nullable=False)
+    donater_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), default=0)
+    amount = db.Column(db.Integer, nullable=False)
+    plan_id = db.Column(db.Integer, db.ForeignKey('donation_plan.id'))
+
 
 
 

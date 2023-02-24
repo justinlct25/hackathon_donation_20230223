@@ -2,11 +2,71 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="project-list-container">
-    {% for project in projects %}
-        <div class="project-brief">
-            {{ project.name }}
-            <a href="{{ url_for('project', prj_id=project.id) }}">view</a>
+    <div class="container">
+        <h1>Our current trending projects</h1>
+    <br>
+        <div class="row card-deck">
+            {% for project in projects %}
+                <div class="col-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.name }}</h5>
+                            <p class="card-text">{{ project.description }}</p>
+                            <p class="card-text"><small class="text-muted">Created: {{ project.post_date }}</small></p>
+                            <a href="{{ url_for('project', prj_id=project.id) }}">view</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-</div>
+    
+    </div>
+    
+
+    <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="well well-sm">
+              <form class="form-horizontal" action="" method="post">
+              <fieldset>
+                <legend class="text-center">Contact us</legend>
+        
+                <!-- Name input-->
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="name">Name</label>
+                  <div class="col-md-12">
+                    <input id="name" name="name" type="text" placeholder="Your name" class="form-control">
+                  </div>
+                </div>
+        
+                <!-- Email input-->
+                <div class="form-group">
+                  <label class="col-md-3 control-label" for="email">Your E-mail</label>
+                  <div class="col-md-12">
+                    <input id="email" name="email" type="text" placeholder="Your email" class="form-control">
+                  </div>
+                </div>
+        
+                <!-- Message body -->
+                <div class="form-group">
+                  <label class="col-md-12 control-label" for="message">Your message</label>
+                  <div class="col-md-12">
+                    <textarea class="form-control" id="message" name="message" placeholder="Please enter your message here..." rows="5"></textarea>
+                  </div>
+                </div>
+        
+                <!-- Form actions -->
+                <div class="form-group">
+                  <div class="col-md-12 text-right">
+                    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                  </div>
+                </div>
+              </fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+
+<!-- </div> -->
 {% endblock content %}

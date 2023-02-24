@@ -33,8 +33,12 @@ h1 {
     font-size: 200%;
 } */
 
+
 /* Campaign page - progess bar */
+
+
 /* reference: https://codepen.io/jidelambo/pen/RaRygY */
+
 #progressbar-wrapper {
     width: 100%;
 }
@@ -57,7 +61,7 @@ h1 {
     counter-increment: step;
     width: 30px;
     height: 30px;
-    line-height : 30px;
+    line-height: 30px;
     border: 1px solid #ddd;
     border-radius: 100%;
     display: block;
@@ -74,7 +78,7 @@ h1 {
     background-color: #ddd;
     top: 15px;
     left: -50%;
-    z-index : -1;
+    z-index: -1;
 }
 
 .progressbar li:first-child:after {
@@ -87,8 +91,25 @@ h1 {
 
 .progressbar li.active:before {
     border-color: green;
-} 
-.progressbar li.active + li:after {
+}
+
+.progressbar li.active+li:after {
     background-color: green;
 }
 
+.flex {
+    display: flex;
+    flex-direction: row;
+}
+
+.btn-selected {
+    display: none;
+}
+
+.selected-donate-option {
+    background: black;
+}
+
+.hide {
+    display: none;
+}

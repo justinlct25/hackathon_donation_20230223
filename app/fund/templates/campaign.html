@@ -1,4 +1,4 @@
-{% extends "layout.html" %} 
+{% extends "layout.html" %}
 {% block content %}
 <div id="banner-wrapper">
     <div class="banner"></div>
@@ -26,7 +26,7 @@
             <button>£25</button>
             <button>£10</button>
             <button>£5</button>
-            <button>Custom</button>
+            {# <button>Custom</button> #}
         </div>
     </div>
 </div>
@@ -41,6 +41,20 @@
     </div>
 </div>
 <div id="discussion">
-    
+    <div class="discussion-box">
+        <p>User 1</p>
+        <p>Good job J! Keep up your work. </p>
+    </div>
+    <div class="disccusion-box">
+        <p>User 2</p>
+        <p>Nice work! Love to our community</p>
+    </div>
+</div>
+<div id="comment">
+    <form>
+        <label for="comment">Discussion: </label>
+        <textarea id="comment-box" name="comment"></textarea>
+        <button type="submit">Send message →</button>
+    </form>
 </div>
 {% endblock content %}
