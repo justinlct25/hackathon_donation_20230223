@@ -1,5 +1,6 @@
 from fund import app, db
-from fund.models import Tag, DonationPeriod, DonationAmount
+from fund.models import Tag, DonationPeriod, DonationAmount, User
+from werkzeug.security import generate_password_hash
 
 OFFICIAL_TAGS = ["stress", "leisure", "work-life-balance", "family", "friends", "couple", "depression", "suicide", "introvert"]
 OFFICIAL_DONATION_PERIODS = ["weekly", "monthly", "yearly"]
@@ -21,3 +22,6 @@ with app.app_context():
             amount = DonationAmount(amount=amount)
             db.session.add(amount)
             db.session.commit()
+    user = User(username="morgan", email="morgan@gmail.com", password=generate_password_hash("morgan"))
+    db.session.add(user)
+    db.session.commit()

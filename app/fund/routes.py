@@ -1,6 +1,7 @@
-from fund import app, db
+from fund import app, db, mail
 from flask import render_template, url_for, request, jsonify, redirect, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
+from flask_mail import Mail, Message
 from fund.models import User, Project, ProjectGoal, DonationPeriod, DonationAmount, DonationPlan, DonationRecord, ProjectComment
 from fund.forms import RegistrationForm, LoginForm, AddProjectForm, AddGoalForm, ProjectCommentForm
 import random
@@ -74,9 +75,9 @@ def project(prj_id):
     periods = DonationPeriod.query.all()
     amounts = DonationAmount.query.all()
     is_manager = True if user in project.managers else False
-    donation_plan = DonationPlan.query.filter(DonationPlan.donater_id.like(current_user.id))
+    donation_plan = DonationPlan.query.filter(DonationPlan.donater_id.like(current_user.id), DonationPlan.project_id.like(prj_id)).first()
     comment_form = ProjectCommentForm()
-    return render_template('project.html', user=user, is_manager=is_manager, project=project, periods=periods, amounts=amounts, comment_form=comment_form)
+    return render_template('project.html', user=user, is_manager=is_manager, project=project, periods=periods, amounts=amounts, comment_form=comment_form, donation_plan=donation_plan)
 
 @app.route("/addgoal/<int:prj_id>", methods=['GET', 'POST'])
 @login_required
@@ -118,11 +119,36 @@ def addDonation(prj_id):
         plan = DonationPlan(donater_id=user_id, project_id=prj_id)
         plan.amount.append(amount)
         plan.period.append(period)
-        plan.records.append(record)
+        record.plan = str(amount.amount) + str(period.period)
         db.session.add(plan)
+    db.session.commit()
+    send_email(user.username, user.email, project.name, amount.amount)
+    return redirect(url_for('project', prj_id=prj_id))
+
+@app.route("/delete_donation_plan/<int:prj_id>/<int:plan_id>", methods=['GET','POST'])
+@login_required
+def deleteDonationPlan(prj_id, plan_id):
+    # DonationPlan.query.filter_by(id=plan_id).delete()
+    plan = DonationPlan.query.get_or_404(plan_id)
+    plan.donater_id = 1
     db.session.commit()
     return redirect(url_for('project', prj_id=prj_id))
 
+def send_email(name, email, project, amount):
+  msg = Message("Thank you for supporting NPT Mind.", sender='lyantung0822@gmail.com', recipients=[email])
+  msg.body = """
+  Dear %s,
+  
+  Thank you for joining our fight for mental health with NPT Mind. Your donation can make a difference in our community! 
+  
+  Here is your receipt for the donation that you have made:
+  
+  Donor's name: %s
+  Campaign: %s
+  Donation amount: %s
+  """ % (name, name, project, amount)
+
+  mail.send(msg)
 @app.route("/comment/<int:prj_id>", methods=['POST'])
 @login_required
 def comment(prj_id):
