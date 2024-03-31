@@ -16,8 +16,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 # DB Connection
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://c22011528:Twente0508$@csmysql.cs.cf.ac.uk:3306/c22011528_donation'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'fund.db')
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://c22011528:Twente0508$@csmysql.cs.cf.ac.uk:3306/c22011528_donation'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'fund.db')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
